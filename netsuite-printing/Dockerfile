@@ -24,6 +24,9 @@ FROM nginx:alpine
 COPY --from=builder /app/.next /usr/share/nginx/html
 COPY --from=builder /app/public /usr/share/nginx/html
 
+# Copy the NGINX configuration file
+COPY default.conf /etc/nginx/conf.d/default.conf
+
 # Expose port 80 for Nginx
 EXPOSE 1000
 
