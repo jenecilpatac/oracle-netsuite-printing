@@ -1,5 +1,6 @@
  nginx:
     image: nginx:alpine  # Use the official NGINX image
+    container_name: netsuite-nginx
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf # Mount the custom NGINX config
     ports:
