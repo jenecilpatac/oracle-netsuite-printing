@@ -6,20 +6,27 @@ import { PrintPageProps } from "@/types/types";
 
 
 
-const PrintPage: React.FC<PrintPageProps> = ({ data, componentType }) => {
+// const PrintPage: React.FC<PrintPageProps> = ({ data, componentType }) => {
 
-    const renderReceiptComponent = () => {
-        switch (componentType) {
-          case "Collection Receipt":
-            return <CollectionReceipt data={data} />;
-          case "Cash Sales Invoice":
-            return <CashSalesInvoice data={data} />;
-          default:
-            return null;
-        }
-      };
-    
-      return <div><AuthProvider>{renderReceiptComponent()}</AuthProvider></div>;
-};
+// };
+
+// export default PrintPage;
+
+
+const PrintPage = ({ data, componentType }: any) => {
+
+  const renderReceiptComponent = () => {
+    switch (componentType) {
+      case "Collection Receipt":
+        return <CollectionReceipt data={data} />;
+      case "Cash Sales Invoice":
+        return <CashSalesInvoice data={data} />;
+      default:
+        return null;
+    }
+  };
+
+  return <div><AuthProvider>{renderReceiptComponent()}</AuthProvider></div>;
+}
 
 export default PrintPage;
