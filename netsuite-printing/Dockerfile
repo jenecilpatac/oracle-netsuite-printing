@@ -1,34 +1,24 @@
-# Use official Node.js image as base image
-FROM node:18 AS builder
+# Use a stable Node.js base image
+FROM node:18
 
-# Set working directory inside the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or pnpm-lock.yaml) to install dependencies
+# Copy only package.json and pnpm-lock.yaml to install dependencies
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm install -g pnpm && pnpm install
+RUN npm install -g pnpm
+RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the application
 COPY . .
 
-# Build the Next.js application
+# Build the application
 RUN pnpm run build
 
-
-# Use Nginx to serve the app in production
-FROM nginx:alpine
-
-# Copy the build output from the builder stage to Nginx's static folder
-COPY --from=builder /app/.next /usr/share/nginx/html
-COPY --from=builder /app/public /usr/share/nginx/html
-
-# Copy the NGINX configuration file
-COPY default.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80 for Nginx
+# Expose the port Next.js runs on
 EXPOSE 1000
 
-# Command to start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Run the application
+CMD ["pnpm", "start"]

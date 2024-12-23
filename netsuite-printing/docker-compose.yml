@@ -1,8 +1,6 @@
-
+version: '3.9'
 services:
-  netsuite-printing:
-    container_name: netsuite-printing
-    restart: unless-stopped
+  app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,6 +9,4 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - ./src:/app/src 
-    stdin_open: true
-    tty: true
+    command: pnpm start
