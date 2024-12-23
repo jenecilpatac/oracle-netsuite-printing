@@ -1,24 +1,34 @@
-# Use a stable Node.js base image
-FROM node:18
+# Step 1: Build the Next.js application
+FROM node:18 AS builder
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy only package.json and pnpm-lock.yaml to install dependencies
-COPY package.json pnpm-lock.yaml ./
-
 # Install dependencies
-RUN npm install -g pnpm
-RUN pnpm install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm install
 
 # Copy the rest of the application
 COPY . .
 
-# Build the application
-RUN pnpm run build
+# Build the Next.js app
+RUN npm run build
 
-# Expose the port Next.js runs on
-EXPOSE 3000
+# Step 2: Create the production image
+FROM node:18 AS production
 
-# Run the application
-CMD ["pnpm", "start"]
+WORKDIR /app
+
+# Install only production dependencies
+COPY --from=builder /app/package.json /app/package-lock.json ./
+RUN npm install --production
+
+# Copy built files from builder
+COPY --from=builder /app/.next /app/.next
+COPY --from=builder /app/public /app/public
+
+# Expose the application port
+EXPOSE 1000
+
+# Start the Next.js app
+CMD ["npm", "start"]
