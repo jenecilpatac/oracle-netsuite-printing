@@ -4,6 +4,7 @@ services:
   nestsuite-printing:
     build: .
     container_name: nestsuite-printing
+    restart: unless-stopped
     networks:
       - app-network
     depends_on:
